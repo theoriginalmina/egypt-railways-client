@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Modal, Form, Button, Alert } from "react-bootstrap";
-import { gql, useMutation } from "@apollo/client";
+import React from "react";
+import { Row, Col, Modal, Form, Button } from "react-bootstrap";
+import { useRegisterMutation } from "../../generated/schema";
 
 interface registerProps {
   show: boolean;
@@ -8,39 +8,19 @@ interface registerProps {
 }
 
 const Register: React.FC<registerProps> = ({ show, handleClose }) => {
-  const ADD_USER = gql`
-    mutation ($password: String!, $email: String!) {
-      register(password: $password, email: $email) {
-        errors {
-          field
-          message
-        }
-        registered
-      }
-    }
-  `;
-
   let email: any;
   let password: any;
-  const [addUser, { data, loading }] = useMutation(ADD_USER);
 
-  // console.log(data);
+  const [registerMutation, { data, loading, error }] = useRegisterMutation({
+    variables: {
+      email,
+      password,
+    },
+  });
 
-  const [formErrors, setFormErrors] = useState({});
+  console.log(loading);
 
-  useEffect(() => {
-    if (data !== undefined) {
-      let key = `${data.register.errors.field}`;
-      let value = `${data.register.errors.message}`;
-      setFormErrors({
-        [key]: value,
-      });
-    }
-
-    console.log("Use Effect");
-  }, [data]);
-
-  console.log(formErrors);
+  console.log("Data", data);
 
   return (
     <Modal show={show} size="lg" onHide={handleClose}>
@@ -85,13 +65,17 @@ const Register: React.FC<registerProps> = ({ show, handleClose }) => {
           {/* Form */}
           <Form
             className="p-3"
-            onSubmit={(e: any) => {
+            onSubmit={async (e: any) => {
               e.preventDefault();
-              addUser({
-                variables: { email: email.value, password: password.value },
+              await registerMutation({
+                variables: {
+                  email: email.value,
+                  password: password.value,
+                },
               });
             }}
           >
+            {/* Email */}
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label className="main-label fw-bold">
                 Email address
@@ -100,31 +84,33 @@ const Register: React.FC<registerProps> = ({ show, handleClose }) => {
                 type="email"
                 size="lg"
                 className="main-input"
-                ref={(node: any) => {
-                  email = node;
+                ref={(value: HTMLInputElement) => {
+                  email = value;
                 }}
               />
             </Form.Group>
-            {data && (
-              <Alert variant="danger">{data.register.errors.message}</Alert>
-            )}
-
+            {/* Password */}
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label className="main-label fw-bold">Password</Form.Label>
               <Form.Control
                 type="password"
                 className="main-input"
-                ref={(node: any) => {
-                  password = node;
+                ref={(value: HTMLInputElement) => {
+                  password = value;
                 }}
               />
             </Form.Group>
+            {/* Test */}
             <Button
               type="submit"
               className="main-button w-100 mt-2 py-2 fw-bold"
+              disabled={loading}
             >
               Submit
             </Button>
+            {error && (
+              <div>Server is down right now, try again in few moments</div>
+            )}
 
             <Form.Text className="text-muted text-center d-block mt-4 w-75">
               By creating an account you agree to our Terms of Use and Privacy

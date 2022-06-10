@@ -1,0 +1,10 @@
+schema: ${GRAPHQL_ENDPOINT}
+documents: "./src/graphql/**/*.graphql"
+generates:
+  ./src/generated/schema.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true

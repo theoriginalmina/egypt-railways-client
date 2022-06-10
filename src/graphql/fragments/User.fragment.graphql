@@ -1,0 +1,7 @@
+fragment RegularUserResponse on RegisterResponse {
+  errors {
+    field
+    message
+  }
+  registered
+}

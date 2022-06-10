@@ -74,7 +74,7 @@ const Navbar = () => {
           >
             Register
           </Button>
-          <Register show={show} handleClose={handleClose} />
+          {show && <Register show={show} handleClose={handleClose} />}
         </Col>
       </Row>
     </Container>
