@@ -1,5 +1,6 @@
-import React from "react";
-import { Row, Col, Modal, Form, Button } from "react-bootstrap";
+import React, { SyntheticEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { Row, Col, Modal, Form, Button, Alert } from "react-bootstrap";
 import { useRegisterMutation } from "../../generated/schema";
 
 interface registerProps {
@@ -8,19 +9,32 @@ interface registerProps {
 }
 
 const Register: React.FC<registerProps> = ({ show, handleClose }) => {
-  let email: any;
-  let password: any;
+  let email: HTMLInputElement;
+  let password: HTMLInputElement;
 
-  const [registerMutation, { data, loading, error }] = useRegisterMutation({
-    variables: {
-      email,
-      password,
-    },
-  });
+  const [registerMutation, { data, loading, error }] = useRegisterMutation();
 
-  console.log(loading);
+  let navigate = useNavigate();
 
-  console.log("Data", data);
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+
+    try {
+      let result = await registerMutation({
+        variables: {
+          email: email.value,
+          password: password.value,
+        },
+      });
+      if (result.data?.register.registered === true) {
+        return navigate("/dashboard", { replace: true });
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <Modal show={show} size="lg" onHide={handleClose}>
@@ -52,7 +66,7 @@ const Register: React.FC<registerProps> = ({ show, handleClose }) => {
           >
             X
           </Button>
-          <div>
+          <div className="p-2">
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
               <Form.Check
                 type="checkbox"
@@ -63,56 +77,59 @@ const Register: React.FC<registerProps> = ({ show, handleClose }) => {
           </div>
 
           {/* Form */}
-          <Form
-            className="p-3"
-            onSubmit={async (e: any) => {
-              e.preventDefault();
-              await registerMutation({
-                variables: {
-                  email: email.value,
-                  password: password.value,
-                },
-              });
-            }}
-          >
+          <Form className="p-3" onSubmit={handleSubmit}>
             {/* Email */}
             <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label className="main-label fw-bold">
-                Email address
-              </Form.Label>
+              <Form.Label className="fw-bold">Email address</Form.Label>
               <Form.Control
-                type="email"
+                type="text"
                 size="lg"
-                className="main-input"
                 ref={(value: HTMLInputElement) => {
                   email = value;
                 }}
               />
+              {/* Errors */}
+              {data && data.register.errors?.field === "email" ? (
+                <Alert variant="danger" className="p-2 mt-1 text-center">
+                  {data.register.errors.message}
+                </Alert>
+              ) : null}
             </Form.Group>
+
             {/* Password */}
             <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label className="main-label fw-bold">Password</Form.Label>
+              <Form.Label className="fw-bold">Password</Form.Label>
               <Form.Control
                 type="password"
-                className="main-input"
+                size="lg"
                 ref={(value: HTMLInputElement) => {
                   password = value;
                 }}
               />
+              {/* Errors */}
+              {data && data.register.errors?.field === "password" ? (
+                <Alert variant="danger" className="p-2 mt-1 text-center">
+                  {data.register.errors.message}
+                </Alert>
+              ) : null}
             </Form.Group>
             {/* Test */}
             <Button
               type="submit"
-              className="main-button w-100 mt-2 py-2 fw-bold"
+              className="w-100 mt-2 py-2 fw-bold"
               disabled={loading}
             >
-              Submit
+              Register
             </Button>
+
+            {/* Main Error */}
             {error && (
-              <div>Server is down right now, try again in few moments</div>
+              <Alert variant="danger" className="mt-1">
+                Server is down right now, try again in few moments
+              </Alert>
             )}
 
-            <Form.Text className="text-muted text-center d-block mt-4 w-75">
+            <Form.Text className="text-muted text-center d-block mt-4 w-75 mx-auto">
               By creating an account you agree to our Terms of Use and Privacy
               Policy
             </Form.Text>
