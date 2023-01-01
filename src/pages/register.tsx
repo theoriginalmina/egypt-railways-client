@@ -30,14 +30,18 @@ const Register: React.FC = () => {
 			});
 	};
 
+	document.title = "Egypt Railways | Register"
+
 	return (
 		<>
 			<div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 				<div className="w-full max-w-md space-y-8">
 					<div>
-						<h1 className="text-center text-4xl font-bold tracking-tight text-blue-600">
-							Egypt Railways
-						</h1>
+						<Link to="/">
+							<h1 className="text-center text-4xl font-bold tracking-tight text-blue-600">
+								Egypt Railways
+							</h1>
+						</Link>
 						<h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
 							Register new account
 						</h2>
@@ -45,7 +49,7 @@ const Register: React.FC = () => {
 							Or{" "}
 							<Link
 								to="/login"
-								className="font-medium text-indigo-600 hover:text-indigo-500">
+								className="font-medium text-blue-600 hover:text-blue-500">
 								Login
 							</Link>
 						</p>
@@ -124,7 +128,7 @@ const Register: React.FC = () => {
 									id="remember-me"
 									name="remember-me"
 									type="checkbox"
-									className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+									className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 								/>
 								<label
 									htmlFor="remember-me"
@@ -136,7 +140,7 @@ const Register: React.FC = () => {
 							<div className="text-sm">
 								<Link
 									to="/forgot-password"
-									className="font-medium text-indigo-600 hover:text-indigo-500">
+									className="font-medium text-blue-600 hover:text-blue-500">
 									Forgot your password?
 								</Link>
 							</div>
@@ -145,10 +149,10 @@ const Register: React.FC = () => {
 						<div>
 							<button
 								type="submit"
-								className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+								className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
 								<span className="absolute inset-y-0 left-0 flex items-center pl-3">
 									<LockClosedIcon
-										className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+										className="h-5 w-5 text-blue-500 group-hover:text-blue-400"
 										aria-hidden="true"
 									/>
 								</span>

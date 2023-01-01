@@ -2,7 +2,8 @@ import React from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 
-function App() {
+const App:React.FC = () => {
+	document.title = "Egypt Railways | Home"
 	return (
 		<div className="App">
 			<Navbar />

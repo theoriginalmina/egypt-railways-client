@@ -6,7 +6,8 @@
 
 -   Typescript as main language.
 -   React.
--   Tailwindcss.
+- 	Redux.
+-   TailwindCSS.
 
 # Live Link
 
